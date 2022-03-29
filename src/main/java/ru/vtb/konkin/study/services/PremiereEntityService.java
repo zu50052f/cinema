@@ -2,6 +2,7 @@ package ru.vtb.konkin.study.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vtb.konkin.study.entities.PremiereEntity;
 import ru.vtb.konkin.study.repositories.PremiereEntityRepository;
 
@@ -24,14 +25,17 @@ public class PremiereEntityService {
         return premiereEntity.orElse(null);
     }
 
+    @Transactional
     public void saveOrUpdate(PremiereEntity premiereEntity) {
         premiereEntityRepository.save(premiereEntity);
     }
 
+    @Transactional
     public void deleteById(String id) {
         premiereEntityRepository.deleteById(id);
     }
 
+    @Transactional
     public void updateAvailableSeatsById(String id, int availableSeats) {
         Optional<PremiereEntity> optionalPremiereEntity = premiereEntityRepository.findById(id);
         if (optionalPremiereEntity.isPresent()) {
@@ -43,6 +47,7 @@ public class PremiereEntityService {
         }
     }
 
+    @Transactional
     public void updateAgeCategoryById(String id, int ageCategory) {
         Optional<PremiereEntity> optionalPremiereEntity = premiereEntityRepository.findById(id);
         if (optionalPremiereEntity.isPresent()) {
@@ -52,5 +57,17 @@ public class PremiereEntityService {
         } else {
             throw new EntityNotFoundException("There is no premiere with id " + id);
         }
+    }
+
+
+    @Transactional
+    public void stepByStepDeleteToShowTransactionalAnnotationAtWork(String id) {
+        premiereEntityRepository.deleteById(id);
+        throw new IllegalArgumentException("Age category can't be greater than 100!");
+    }
+
+    public void stepByStepDeleteToShowTransactionalAnnotationAtWork(String id, boolean nontransactional) {
+        premiereEntityRepository.deleteById(id);
+        throw new IllegalArgumentException("Age category can't be greater than 100!");
     }
 }

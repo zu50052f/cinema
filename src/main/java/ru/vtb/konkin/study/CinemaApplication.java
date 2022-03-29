@@ -32,6 +32,7 @@ public class CinemaApplication {
         premiereService.bookSomeSeats("1", 60);
         premiereService.changeAgeCategory("1", 5);
         premiereService.changeAgeCategory("1", -1);
+        premiereService.changeAgeCategory("1", 101);
 
         // 3) Удалять мероприятие
         premiereService.removePremiere("2");
@@ -39,6 +40,9 @@ public class CinemaApplication {
         // 4) Просматривать список всех мероприятий и какого-то конкретного (с подробным описанием)
         premiereService.listPremieres();
         premiereService.printPremiereInfo("1");
+
+        // 5) Демонтраиця транзакционности
+        premiereService.showTransactionsInAction();
 
         log.info("\n\n###################\n>>  Demo End\n###################\n\n\n\n");
     }

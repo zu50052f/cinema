@@ -87,4 +87,25 @@ public class PremiereService {
             log.error("There is no premiere with id {}!", premiereId);
         }
     }
+
+    public void showTransactionsInAction() {
+        log.info("\n>>  Start interrupted transaction demo!\n>>    Trying to delete");
+        listPremieres();
+        try {
+            premiereEntityService.stepByStepDeleteToShowTransactionalAnnotationAtWork("1");
+        } catch (IllegalArgumentException illegalArgumentException) {
+            log.info("\n>>    Exception on delete caught!");
+        }
+        listPremieres();
+
+        log.info("\n>>  Now delete and throw without transactional annotation");
+        try {
+            premiereEntityService.stepByStepDeleteToShowTransactionalAnnotationAtWork("1", true);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            log.info("\n>>    Exception on delete caught!");
+        }
+        listPremieres();
+
+        log.info("\n>>  The end.");
+    }
 }
