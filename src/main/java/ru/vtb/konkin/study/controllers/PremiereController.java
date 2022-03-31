@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/premiere")
 public class PremiereController {
 
     private static final Logger log = LoggerFactory.getLogger(PremiereController.class);
@@ -28,7 +29,7 @@ public class PremiereController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping("/premieres")
+    @GetMapping("/info/all")
     public List<PremiereDto> getAllPremiereEntity() {
         return premiereService
                 .getPremieres()
@@ -38,20 +39,20 @@ public class PremiereController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/premiere/{id}")
+    @GetMapping("/info/{id}")
     public PremiereDto getPremiereEntityById(@PathVariable("id") String id){
         return PremiereMapper.modelToDto(premiereService.getPremiereById(id));
 
     }
 
-    @PostMapping("/premiere")
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public PremiereDto createPremiere(@RequestBody PremiereDto premiereDto) {
         premiereService.addPremiere(PremiereMapper.dtoToModel(premiereDto));
         return PremiereMapper.modelToDto(premiereService.getPremiereById(premiereDto.getId()));
     }
 
-    @PutMapping("/premiere/{id}")
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PremiereDto updatePremiere(@PathVariable("id") String id, @RequestBody PremiereDto premiereDto) {
         if (!Objects.equals(id, premiereDto.getId())) {
@@ -62,7 +63,7 @@ public class PremiereController {
         return PremiereMapper.modelToDto(premiereService.getPremiereById(premiereDto.getId()));
     }
 
-    @PostMapping("/premiere/buy")
+    @PostMapping("/buy")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TicketDto buyTicket(@RequestBody TicketDto ticketDto) {
         log.info("\n>> {}", ticketDto);
