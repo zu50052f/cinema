@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.vtb.konkin.study.dto.PremiereDto;
+import ru.vtb.konkin.study.dto.TicketDto;
 import ru.vtb.konkin.study.mappers.PremiereMapper;
+import ru.vtb.konkin.study.mappers.TicketMapper;
 import ru.vtb.konkin.study.services.PremiereService;
+import ru.vtb.konkin.study.services.TicketService;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,9 +21,11 @@ public class PremiereController {
     private static final Logger log = LoggerFactory.getLogger(PremiereController.class);
 
     private final PremiereService premiereService;
+    private final TicketService ticketService;
 
-    public PremiereController(PremiereService premiereEntityService) {
+    public PremiereController(PremiereService premiereEntityService, TicketService ticketService) {
         this.premiereService = premiereEntityService;
+        this.ticketService = ticketService;
     }
 
     @GetMapping("/premieres")
@@ -55,5 +60,12 @@ public class PremiereController {
 
         premiereService.update(PremiereMapper.dtoToModel(premiereDto));
         return PremiereMapper.modelToDto(premiereService.getPremiereById(premiereDto.getId()));
+    }
+
+    @PostMapping("/premiere/buy")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public TicketDto buyTicket(@RequestBody TicketDto ticketDto) {
+        log.info("\n>> {}", ticketDto);
+        return TicketMapper.modelToDto(ticketService.buy(ticketDto.getPremiereId(), ticketDto.getAmountOfSeats()));
     }
 }
