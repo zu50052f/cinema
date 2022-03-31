@@ -44,6 +44,10 @@ public class CinemaApplication {
         // 5) Демонтраиця транзакционности
         premiereService.showTransactionsInAction();
 
+        // 6)
+        premiereService.addPremiere(new Premiere("1", "PREMIERE_1", "DESCRIPTION", 10, 100));
+        premiereService.addPremiere(new Premiere("2", "PREMIERE_2", "DESCRIPTION", 10, 100));
+
         log.info("\n\n###################\n>>  Demo End\n###################\n\n\n\n");
     }
 }

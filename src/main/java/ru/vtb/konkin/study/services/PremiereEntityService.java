@@ -1,5 +1,7 @@
 package ru.vtb.konkin.study.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import java.util.Optional;
 
 @Service
 public class PremiereEntityService {
+    private static final Logger log = LoggerFactory.getLogger(PremiereEntityService.class);
+
     @Autowired
     PremiereEntityRepository premiereEntityRepository;
 
@@ -69,5 +73,14 @@ public class PremiereEntityService {
     public void stepByStepDeleteToShowTransactionalAnnotationAtWork(String id, boolean nontransactional) {
         premiereEntityRepository.deleteById(id);
         throw new IllegalArgumentException("Age category can't be greater than 100!");
+    }
+
+    @Transactional
+    public void update(PremiereEntity updatedPremiere) {
+        Optional<PremiereEntity> optionalPremiere = premiereEntityRepository.findById(updatedPremiere.getId());
+        if (!optionalPremiere.isPresent()) {
+            throw new IllegalArgumentException("Unknown Premiere Id!");
+        }
+        premiereEntityRepository.save(updatedPremiere);
     }
 }

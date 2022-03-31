@@ -1,7 +1,6 @@
 package ru.vtb.konkin.study.services;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import ru.vtb.konkin.study.mappers.PremiereMapper;
 import ru.vtb.konkin.study.models.Premiere;
@@ -10,10 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Slf4j
 public class PremiereService {
-    @Autowired
-    PremiereEntityService premiereEntityService;
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(PremiereService.class);
+
+    private final PremiereEntityService premiereEntityService;
+
+    public PremiereService(PremiereEntityService premiereEntityService) {
+        this.premiereEntityService = premiereEntityService;
+    }
 
     public void addPremiere(Premiere premiere) {
         premiereEntityService.saveOrUpdate(PremiereMapper.modelToEntity(premiere));
@@ -107,5 +110,10 @@ public class PremiereService {
         listPremieres();
 
         log.info("\n>>  The end.");
+    }
+
+    public Premiere update(Premiere updatedPremiere) {
+        premiereEntityService.update(PremiereMapper.modelToEntity(updatedPremiere));
+        return PremiereMapper.entityToModel(premiereEntityService.getPremiereEntityById(updatedPremiere.getId()));
     }
 }
